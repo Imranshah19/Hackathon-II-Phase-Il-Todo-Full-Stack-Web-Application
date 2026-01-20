@@ -1,0 +1,3 @@
+# Architecture Decision Records
+# This directory contains ADRs for significant architectural decisions.
+# Use /sp.adr <decision-title> to create new ADRs.
