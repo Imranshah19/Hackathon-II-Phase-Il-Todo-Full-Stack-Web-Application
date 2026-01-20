@@ -193,9 +193,16 @@ class ApiClient {
   // Task Endpoints
   // ---------------------------------------------------------------------------
 
-  async getTasks(completed?: boolean): Promise<Task[]> {
-    const params = completed !== undefined ? `?completed=${completed}` : "";
-    return this.request<Task[]>(`/api/tasks${params}`);
+  async getTasks(options?: { completed?: boolean; search?: string }): Promise<Task[]> {
+    const params = new URLSearchParams();
+    if (options?.completed !== undefined) {
+      params.append("completed", String(options.completed));
+    }
+    if (options?.search) {
+      params.append("search", options.search);
+    }
+    const queryString = params.toString();
+    return this.request<Task[]>(`/api/tasks${queryString ? `?${queryString}` : ""}`);
   }
 
   async getTask(id: string): Promise<Task> {
