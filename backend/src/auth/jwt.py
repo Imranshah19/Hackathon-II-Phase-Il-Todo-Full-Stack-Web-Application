@@ -6,8 +6,7 @@ Tokens are signed with HS256 algorithm using a shared secret.
 """
 
 import os
-from datetime import datetime, timedelta, timezone
-from typing import Any
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from jose import JWTError, jwt
@@ -48,15 +47,15 @@ def create_access_token(
         >>> assert token.count(".") == 2  # JWT format: header.payload.signature
     """
     if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = datetime.now(UTC) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(UTC) + timedelta(minutes=JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
 
     payload = {
         "sub": str(user_id),
         "email": email,
         "exp": expire,
-        "iat": datetime.now(timezone.utc),
+        "iat": datetime.now(UTC),
         "type": "access",
     }
 

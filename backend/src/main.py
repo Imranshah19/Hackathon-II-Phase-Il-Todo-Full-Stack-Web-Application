@@ -10,13 +10,11 @@ Configures the main application with:
 
 import os
 from contextlib import asynccontextmanager
-from typing import Any
 
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import ValidationError
 
 from src.db import create_db_and_tables
 
@@ -26,7 +24,7 @@ from src.db import create_db_and_tables
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     """
     Application lifespan manager.
 
@@ -82,7 +80,7 @@ def create_app() -> FastAPI:
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(
-        request: Request, exc: RequestValidationError
+        _request: Request, exc: RequestValidationError
     ) -> JSONResponse:
         """Handle Pydantic validation errors with consistent format."""
         errors = []
@@ -102,7 +100,7 @@ def create_app() -> FastAPI:
 
     @app.exception_handler(ValueError)
     async def value_error_handler(
-        request: Request, exc: ValueError
+        _request: Request, exc: ValueError
     ) -> JSONResponse:
         """Handle ValueError with 400 Bad Request."""
         return JSONResponse(

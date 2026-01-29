@@ -5,8 +5,9 @@ Tests:
 - T028: User-Task relationship with cascade delete
 """
 
-import pytest
 from uuid import uuid4
+
+import pytest
 
 
 @pytest.mark.integration
@@ -39,8 +40,8 @@ class TestUserTaskRelationship:
 
     def test_task_user_id_foreign_key(self) -> None:
         """Task.user_id should reference User.id."""
+
         from src.models.task import Task
-        from sqlmodel import Field
 
         # Check Task model has user_id field with foreign_key
         user_id_field = Task.model_fields.get("user_id")
@@ -48,8 +49,8 @@ class TestUserTaskRelationship:
 
     def test_user_tasks_list_type(self) -> None:
         """User.tasks should be a list type for one-to-many relationship."""
+
         from src.models.user import User
-        from typing import get_type_hints
 
         # The tasks field should be typed as list
         user = User(
@@ -64,8 +65,9 @@ class TestUserTaskRelationship:
 
     def test_cascade_delete_configuration(self) -> None:
         """User->Task relationship should be configured with cascade delete."""
-        from src.models.user import User
         import inspect
+
+        from src.models.user import User
 
         # Check that User class has relationship configuration
         # The cascade delete is configured via sa_relationship_kwargs
@@ -78,7 +80,6 @@ class TestUserTaskRelationship:
     def test_task_belongs_to_user(self) -> None:
         """Task should store user_id correctly linking to User."""
         from src.models.task import Task
-        from src.models.user import User
 
         user_id = uuid4()
         task = Task(

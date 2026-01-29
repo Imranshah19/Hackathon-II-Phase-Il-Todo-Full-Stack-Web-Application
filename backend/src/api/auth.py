@@ -7,11 +7,9 @@ Endpoints:
 - GET /api/auth/me - Get current user profile
 """
 
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr
-from sqlmodel import Session, select
+from sqlmodel import select
 
 from src.auth.dependencies import CurrentUser, DbSession
 from src.auth.jwt import create_access_token

@@ -6,9 +6,10 @@ Tests:
 - T060: Final validation against data-model.md traceability table
 """
 
-import pytest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
+
+import pytest
 
 
 @pytest.mark.integration
@@ -88,8 +89,9 @@ class TestFR004ForeignKey:
 
     def test_task_user_id_is_foreign_key(self) -> None:
         """Task.user_id should be a foreign key to users table."""
-        from src.models.task import Task
         import inspect
+
+        from src.models.task import Task
 
         source = inspect.getsource(Task)
         assert 'foreign_key="users.id"' in source or "foreign_key='users.id'" in source
@@ -122,9 +124,9 @@ class TestFR006CreatedAtDefault:
         """User.created_at should be auto-generated."""
         from src.models.user import User
 
-        before = datetime.now(timezone.utc)
+        before = datetime.now(UTC)
         user = User(email="test@example.com", password_hash="hash")
-        after = datetime.now(timezone.utc)
+        after = datetime.now(UTC)
 
         assert before <= user.created_at <= after
 
@@ -132,9 +134,9 @@ class TestFR006CreatedAtDefault:
         """Task.created_at should be auto-generated."""
         from src.models.task import Task
 
-        before = datetime.now(timezone.utc)
+        before = datetime.now(UTC)
         task = Task(title="Test", user_id=uuid4())
-        after = datetime.now(timezone.utc)
+        after = datetime.now(UTC)
 
         assert before <= task.created_at <= after
 
@@ -172,6 +174,7 @@ class TestFR008EmailValidation:
     def test_invalid_email_rejected(self) -> None:
         """Invalid email format should be rejected."""
         from pydantic import ValidationError
+
         from src.models.user import UserCreate
 
         with pytest.raises(ValidationError):
@@ -185,6 +188,7 @@ class TestFR009TitleValidation:
     def test_title_min_length(self) -> None:
         """Title must be at least 1 character."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         with pytest.raises(ValidationError):
@@ -197,6 +201,7 @@ class TestFR009TitleValidation:
     def test_title_max_length(self) -> None:
         """Title must be at most 255 characters."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         with pytest.raises(ValidationError):
@@ -214,6 +219,7 @@ class TestFR010DescriptionValidation:
     def test_description_max_length(self) -> None:
         """Description must be at most 4000 characters."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         with pytest.raises(ValidationError):
@@ -252,8 +258,9 @@ class TestFR012CascadeDelete:
 
     def test_user_has_tasks_relationship_with_cascade(self) -> None:
         """User should have tasks relationship with cascade delete."""
-        from src.models.user import User
         import inspect
+
+        from src.models.user import User
 
         source = inspect.getsource(User)
         assert "cascade" in source.lower()
@@ -267,6 +274,7 @@ class TestFR013ValidationErrors:
     def test_validation_error_includes_field_name(self) -> None:
         """Validation errors should include field names."""
         from pydantic import ValidationError
+
         from src.models.user import UserCreate
 
         with pytest.raises(ValidationError) as exc_info:

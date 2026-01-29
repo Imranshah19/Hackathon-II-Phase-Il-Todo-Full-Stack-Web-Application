@@ -5,9 +5,10 @@ Tests:
 - T027: Validate Task schemas match OpenAPI specification
 """
 
-import pytest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
+
+import pytest
 
 
 @pytest.mark.contract
@@ -63,8 +64,8 @@ class TestTaskSchemaContract:
             title="Test task",
             description="Test description",
             is_completed=False,
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         json_data = task_public.model_dump(mode="json")
@@ -134,6 +135,7 @@ class TestTaskSchemaContract:
     def test_task_title_length_validation(self) -> None:
         """TaskCreate.title should validate length (1-255 chars) per OpenAPI."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         # Empty title should be rejected
@@ -151,6 +153,7 @@ class TestTaskSchemaContract:
     def test_task_description_length_validation(self) -> None:
         """TaskCreate.description should validate max length (4000 chars) per OpenAPI."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         # Description over 4000 chars should be rejected

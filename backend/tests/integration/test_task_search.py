@@ -6,8 +6,9 @@ Tests:
 - Combined search + completed filter
 """
 
-import pytest
 from uuid import uuid4
+
+import pytest
 
 
 @pytest.mark.integration
@@ -16,8 +17,9 @@ class TestTaskSearch:
 
     def test_search_parameter_exists_in_task_list(self) -> None:
         """list_tasks should accept search parameter."""
-        from src.api.tasks import list_tasks
         import inspect
+
+        from src.api.tasks import list_tasks
 
         sig = inspect.signature(list_tasks)
         params = list(sig.parameters.keys())
@@ -32,7 +34,7 @@ class TestTaskSearch:
         assert hasattr(Task, "title"), "Task should have 'title' attribute"
 
         # SQLModel/SQLAlchemy columns support ilike for case-insensitive search
-        title_attr = getattr(Task, "title")
+        title_attr = Task.title
         assert hasattr(title_attr, "ilike") or hasattr(title_attr, "contains"), \
             "Task.title should support SQL search operations"
 

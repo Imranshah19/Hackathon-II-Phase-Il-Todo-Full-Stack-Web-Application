@@ -8,10 +8,10 @@ Tests:
 - T026: TaskPublic schema (all fields included)
 """
 
-import pytest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID
 
+import pytest
 
 # =============================================================================
 # T023: Task Model Creation Tests
@@ -23,8 +23,9 @@ class TestTaskModelCreation:
 
     def test_task_has_uuid_id(self, valid_task_title: str) -> None:
         """Task.id should be a valid UUID, auto-generated."""
-        from src.models.task import Task
         from uuid import uuid4
+
+        from src.models.task import Task
 
         user_id = uuid4()
         task = Task(
@@ -37,15 +38,16 @@ class TestTaskModelCreation:
 
     def test_task_has_created_at_timestamp(self, valid_task_title: str) -> None:
         """Task.created_at should be auto-populated with UTC timestamp."""
-        from src.models.task import Task
         from uuid import uuid4
 
-        before = datetime.now(timezone.utc)
+        from src.models.task import Task
+
+        before = datetime.now(UTC)
         task = Task(
             title=valid_task_title,
             user_id=uuid4(),
         )
-        after = datetime.now(timezone.utc)
+        after = datetime.now(UTC)
 
         assert task.created_at is not None
         assert isinstance(task.created_at, datetime)
@@ -53,8 +55,9 @@ class TestTaskModelCreation:
 
     def test_task_has_updated_at_timestamp(self, valid_task_title: str) -> None:
         """Task.updated_at should be auto-populated with UTC timestamp."""
-        from src.models.task import Task
         from uuid import uuid4
+
+        from src.models.task import Task
 
         task = Task(
             title=valid_task_title,
@@ -66,8 +69,9 @@ class TestTaskModelCreation:
 
     def test_task_is_completed_defaults_false(self, valid_task_title: str) -> None:
         """Task.is_completed should default to False."""
-        from src.models.task import Task
         from uuid import uuid4
+
+        from src.models.task import Task
 
         task = Task(
             title=valid_task_title,
@@ -78,8 +82,9 @@ class TestTaskModelCreation:
 
     def test_task_description_nullable(self, valid_task_title: str) -> None:
         """Task.description should be nullable (None by default)."""
-        from src.models.task import Task
         from uuid import uuid4
+
+        from src.models.task import Task
 
         task = Task(
             title=valid_task_title,
@@ -90,8 +95,9 @@ class TestTaskModelCreation:
 
     def test_task_stores_user_id(self, valid_task_title: str) -> None:
         """Task should store user_id correctly."""
-        from src.models.task import Task
         from uuid import uuid4
+
+        from src.models.task import Task
 
         user_id = uuid4()
         task = Task(
@@ -134,6 +140,7 @@ class TestTaskCreateValidation:
     def test_empty_title_rejected(self) -> None:
         """TaskCreate should reject empty title."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         with pytest.raises(ValidationError) as exc_info:
@@ -145,6 +152,7 @@ class TestTaskCreateValidation:
     def test_title_too_long_rejected(self, invalid_task_titles: list[str]) -> None:
         """TaskCreate should reject title exceeding 255 characters."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         long_title = "x" * 256
@@ -168,6 +176,7 @@ class TestTaskCreateValidation:
     ) -> None:
         """TaskCreate should reject description exceeding 4000 characters."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         long_description = "x" * 4001
@@ -246,14 +255,15 @@ class TestTaskPublicSchema:
 
     def test_task_public_has_all_fields(self, valid_task_title: str) -> None:
         """TaskPublic should include id, user_id, title, description, is_completed, timestamps."""
-        from src.models.task import Task, TaskPublic
+        from datetime import datetime
         from uuid import uuid4
-        from datetime import datetime, timezone
+
+        from src.models.task import Task, TaskPublic
 
         user_id = uuid4()
         task_id = uuid4()
-        created = datetime.now(timezone.utc)
-        updated = datetime.now(timezone.utc)
+        created = datetime.now(UTC)
+        updated = datetime.now(UTC)
 
         task = Task(
             id=task_id,
@@ -277,9 +287,10 @@ class TestTaskPublicSchema:
 
     def test_task_public_json_serialization(self, valid_task_title: str) -> None:
         """TaskPublic should serialize to JSON with all fields."""
-        from src.models.task import TaskPublic
+        from datetime import datetime
         from uuid import uuid4
-        from datetime import datetime, timezone
+
+        from src.models.task import TaskPublic
 
         task_public = TaskPublic(
             id=uuid4(),
@@ -287,8 +298,8 @@ class TestTaskPublicSchema:
             title=valid_task_title,
             description="Test",
             is_completed=True,
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         json_data = task_public.model_dump(mode="json")

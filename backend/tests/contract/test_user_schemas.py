@@ -5,9 +5,10 @@ Tests:
 - T015: Validate User schemas match OpenAPI specification
 """
 
-import pytest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
+
+import pytest
 
 
 @pytest.mark.contract
@@ -61,8 +62,8 @@ class TestUserSchemaContract:
         user_public = UserPublic(
             id=uuid4(),
             email="test@example.com",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         json_data = user_public.model_dump(mode="json")
@@ -111,6 +112,7 @@ class TestUserSchemaContract:
     def test_user_email_format_validation(self) -> None:
         """UserCreate.email should validate email format per RFC 5322."""
         from pydantic import ValidationError
+
         from src.models.user import UserCreate
 
         # Invalid emails should be rejected

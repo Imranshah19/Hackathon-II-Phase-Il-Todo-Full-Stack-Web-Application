@@ -5,9 +5,10 @@ Tests:
 - T056: Validate all models against quickstart.md examples
 """
 
-import pytest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
+
+import pytest
 
 
 @pytest.mark.integration
@@ -26,8 +27,8 @@ class TestQuickstartUserExamples:
 
     def test_user_model_creation(self) -> None:
         """Test User model creation as shown in quickstart.md."""
-        from src.models.user import User, UserCreate
         from src.auth.password import hash_password
+        from src.models.user import User, UserCreate
 
         user_create = UserCreate(email="user@example.com", password="securepass123")
         user = User(
@@ -44,6 +45,7 @@ class TestQuickstartUserExamples:
     def test_invalid_email_example(self) -> None:
         """Test invalid email validation from quickstart.md."""
         from pydantic import ValidationError
+
         from src.models.user import UserCreate
 
         # From quickstart: Invalid email
@@ -97,6 +99,7 @@ class TestQuickstartTaskExamples:
     def test_empty_title_example(self) -> None:
         """Test empty title validation from quickstart.md."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         # From quickstart: Empty title
@@ -106,6 +109,7 @@ class TestQuickstartTaskExamples:
     def test_title_too_long_example(self) -> None:
         """Test title too long validation from quickstart.md."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         # From quickstart: Title too long
@@ -115,6 +119,7 @@ class TestQuickstartTaskExamples:
     def test_description_too_long_example(self) -> None:
         """Test description too long validation from quickstart.md."""
         from pydantic import ValidationError
+
         from src.models.task import TaskCreate
 
         # From quickstart: Description too long
@@ -157,7 +162,7 @@ class TestQuickstartTaskUpdateExamples:
         task_update = TaskUpdate(is_completed=True)
         for key, value in task_update.model_dump(exclude_unset=True).items():
             setattr(task, key, value)
-        task.updated_at = datetime.now(timezone.utc)
+        task.updated_at = datetime.now(UTC)
 
         # Verify update applied correctly
         assert task.title == "Original"  # Unchanged
@@ -235,8 +240,8 @@ class TestQuickstartModuleImports:
 
     def test_models_importable(self) -> None:
         """Test model imports work."""
-        from src.models.user import User, UserCreate, UserPublic, UserBase
-        from src.models.task import Task, TaskCreate, TaskUpdate, TaskPublic, TaskBase
+        from src.models.task import Task, TaskCreate, TaskPublic, TaskUpdate
+        from src.models.user import User, UserCreate, UserPublic
 
         # All should be importable
         assert User is not None
@@ -257,8 +262,8 @@ class TestQuickstartModuleImports:
     def test_package_exports(self) -> None:
         """Test models package exports all models."""
         from src.models import (
-            User, UserBase, UserCreate, UserPublic,
-            Task, TaskBase, TaskCreate, TaskUpdate, TaskPublic,
+            Task,
+            User,
         )
 
         assert User is not None

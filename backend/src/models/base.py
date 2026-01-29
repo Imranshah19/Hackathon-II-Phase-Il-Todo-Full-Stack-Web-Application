@@ -7,7 +7,7 @@ This module provides:
 - Base configuration for SQLModel
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime, timezone
 from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
@@ -44,4 +44,4 @@ def utc_now() -> datetime:
         >>> timestamp = utc_now()
         >>> assert timestamp.tzinfo == timezone.utc
     """
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)

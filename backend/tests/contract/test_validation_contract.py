@@ -54,6 +54,7 @@ class TestValidationErrorContract:
     def test_validation_error_json_serializable(self) -> None:
         """ValidationError should be JSON serializable for API response."""
         import json
+
         from src.models.user import UserCreate
 
         with pytest.raises(ValidationError) as exc_info:

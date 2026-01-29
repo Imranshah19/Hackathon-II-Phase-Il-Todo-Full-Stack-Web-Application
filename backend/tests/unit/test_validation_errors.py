@@ -13,7 +13,6 @@ Goal: Ensure consistent, user-friendly error messages across all schemas.
 import pytest
 from pydantic import ValidationError
 
-
 # =============================================================================
 # T038: Email Validation Error Tests
 # =============================================================================

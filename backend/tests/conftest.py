@@ -7,10 +7,11 @@ Test Categories:
 - contract: Schema validation tests for skill inputs/outputs
 """
 
-import pytest
-from typing import Any, Generator
+from collections.abc import Generator
+from typing import Any
 from uuid import uuid4
 
+import pytest
 
 # =============================================================================
 # Markers

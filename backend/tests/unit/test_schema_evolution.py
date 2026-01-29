@@ -9,10 +9,10 @@ Tests:
 Goal: Ensure schemas support forward compatibility with optional fields and defaults.
 """
 
-import pytest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
+import pytest
 
 # =============================================================================
 # T048: Optional Field Handling Tests
@@ -67,8 +67,8 @@ class TestOptionalFieldHandling:
             title="Test",
             description=None,
             is_completed=False,
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         assert task_public.description is None
@@ -129,8 +129,9 @@ class TestDefaultValues:
 
     def test_task_id_auto_generated(self) -> None:
         """Task.id should be auto-generated UUID."""
-        from src.models.task import Task
         from uuid import UUID
+
+        from src.models.task import Task
 
         task = Task(title="Test", user_id=uuid4())
 
@@ -141,9 +142,9 @@ class TestDefaultValues:
         """Task.created_at and updated_at should be auto-generated."""
         from src.models.task import Task
 
-        before = datetime.now(timezone.utc)
+        before = datetime.now(UTC)
         task = Task(title="Test", user_id=uuid4())
-        after = datetime.now(timezone.utc)
+        after = datetime.now(UTC)
 
         assert task.created_at is not None
         assert task.updated_at is not None
@@ -152,8 +153,9 @@ class TestDefaultValues:
 
     def test_user_id_auto_generated(self) -> None:
         """User.id should be auto-generated UUID."""
-        from src.models.user import User
         from uuid import UUID
+
+        from src.models.user import User
 
         user = User(email="test@example.com", password_hash="hash")
 
@@ -164,9 +166,9 @@ class TestDefaultValues:
         """User.created_at and updated_at should be auto-generated."""
         from src.models.user import User
 
-        before = datetime.now(timezone.utc)
+        before = datetime.now(UTC)
         user = User(email="test@example.com", password_hash="hash")
-        after = datetime.now(timezone.utc)
+        after = datetime.now(UTC)
 
         assert user.created_at is not None
         assert user.updated_at is not None
@@ -284,6 +286,7 @@ class TestPartialUpdates:
     def test_update_preserves_field_constraints(self) -> None:
         """TaskUpdate should still validate field constraints."""
         from pydantic import ValidationError
+
         from src.models.task import TaskUpdate
 
         # Title too long should still fail
@@ -342,8 +345,9 @@ class TestSchemaEvolutionPatterns:
 
     def test_model_serialization_stable(self) -> None:
         """Model JSON serialization should be stable and predictable."""
-        from src.models.task import TaskPublic
         import json
+
+        from src.models.task import TaskPublic
 
         task = TaskPublic(
             id=uuid4(),
@@ -351,8 +355,8 @@ class TestSchemaEvolutionPatterns:
             title="Test",
             description=None,
             is_completed=False,
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         # Should serialize to valid JSON
@@ -379,8 +383,8 @@ class TestSchemaEvolutionPatterns:
             title="Test",
             description="Desc",
             is_completed=True,
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         # Convert to public schema

@@ -7,10 +7,10 @@ Tests:
 - T013: UserPublic schema (password_hash excluded)
 """
 
-import pytest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID
 
+import pytest
 
 # =============================================================================
 # T011: User Model Creation Tests
@@ -36,12 +36,12 @@ class TestUserModelCreation:
         """User.created_at should be auto-populated with UTC timestamp."""
         from src.models.user import User
 
-        before = datetime.now(timezone.utc)
+        before = datetime.now(UTC)
         user = User(
             email=valid_user_email,
             password_hash="hashed_password_here"
         )
-        after = datetime.now(timezone.utc)
+        after = datetime.now(UTC)
 
         assert user.created_at is not None
         assert isinstance(user.created_at, datetime)
@@ -110,6 +110,7 @@ class TestUserCreateValidation:
     ) -> None:
         """UserCreate should reject invalid email formats."""
         from pydantic import ValidationError
+
         from src.models.user import UserCreate
 
         for invalid_email in invalid_emails:
@@ -128,6 +129,7 @@ class TestUserCreateValidation:
     ) -> None:
         """UserCreate should reject passwords shorter than 8 characters."""
         from pydantic import ValidationError
+
         from src.models.user import UserCreate
 
         for short_password in invalid_passwords:
@@ -168,17 +170,18 @@ class TestUserPublicSchema:
         self, valid_user_email: str
     ) -> None:
         """UserPublic should NOT include password_hash field."""
-        from src.models.user import User, UserPublic
+        from datetime import datetime
         from uuid import uuid4
-        from datetime import datetime, timezone
+
+        from src.models.user import User, UserPublic
 
         # Create a User with password_hash
         user = User(
             id=uuid4(),
             email=valid_user_email,
             password_hash="secret_hash_value",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         # Convert to UserPublic
@@ -194,13 +197,14 @@ class TestUserPublicSchema:
         self, valid_user_email: str
     ) -> None:
         """UserPublic should include id, email, timestamps."""
-        from src.models.user import User, UserPublic
+        from datetime import datetime
         from uuid import uuid4
-        from datetime import datetime, timezone
+
+        from src.models.user import User, UserPublic
 
         user_id = uuid4()
-        created = datetime.now(timezone.utc)
-        updated = datetime.now(timezone.utc)
+        created = datetime.now(UTC)
+        updated = datetime.now(UTC)
 
         user = User(
             id=user_id,
