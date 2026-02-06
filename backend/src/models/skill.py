@@ -4,10 +4,10 @@ Skill models and enums.
 T006: SkillCategory enum for the 7 skill categories defined in spec.md
 """
 
-from enum import Enum
+from enum import StrEnum
 
 
-class SkillCategory(str, Enum):
+class SkillCategory(StrEnum):
     """
     Categories of skills in the skills library.
 

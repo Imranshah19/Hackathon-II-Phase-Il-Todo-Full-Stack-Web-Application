@@ -8,14 +8,14 @@ T012: FailureResponse model
 """
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field
 
 
-class FailureCode(str, Enum):
+class FailureCode(StrEnum):
     """
     Standard failure codes for skill errors.
 
@@ -161,7 +161,7 @@ class FailureCode(str, Enum):
     """Unable to delete dependent resources"""
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     """
     Severity levels for failures.
 
