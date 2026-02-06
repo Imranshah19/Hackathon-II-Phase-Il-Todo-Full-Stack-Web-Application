@@ -8,7 +8,10 @@ import os
 from collections.abc import Generator
 from typing import Any
 
+from dotenv import load_dotenv
 from sqlmodel import Session, SQLModel, create_engine
+
+load_dotenv()
 
 # Database URL from environment, with fallback for development
 DATABASE_URL = os.getenv(
